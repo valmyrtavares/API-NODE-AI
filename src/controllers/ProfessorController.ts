@@ -1,18 +1,18 @@
 // src/controllers/ProfessorController.ts
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { AppDataSource } from '../database';
 import { Professor } from '../models/Professor';
 
 class ProfessorController {
   static listAll = async (req: Request, res: Response) => {
-    const professorRepository = getRepository(Professor);
+    const professorRepository = AppDataSource.getRepository(Professor);
     const professores = await professorRepository.find();
     res.send(professores);
   };
 
   static getOneById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const professorRepository = getRepository(Professor);
+    const professorRepository = AppDataSource.getRepository(Professor);
     try {
       const professor = await professorRepository.findOneOrFail({ where: { id } });
       res.send(professor);
@@ -29,7 +29,7 @@ class ProfessorController {
     professor.cpf = cpf;
     professor.celular = celular;
 
-    const professorRepository = getRepository(Professor);
+    const professorRepository = AppDataSource.getRepository(Professor);
     try {
       await professorRepository.save(professor);
     } catch (e) {
@@ -43,7 +43,7 @@ class ProfessorController {
     const id = Number(req.params.id);
     const { nome, disciplina, cpf, celular } = req.body;
 
-    const professorRepository = getRepository(Professor);
+    const professorRepository = AppDataSource.getRepository(Professor);
     let professor;
     try {
       professor = await professorRepository.findOneOrFail({ where: { id } });
@@ -70,7 +70,7 @@ class ProfessorController {
   static deleteProfessor = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
-    const professorRepository = getRepository(Professor);
+    const professorRepository = AppDataSource.getRepository(Professor);
     let professor: Professor;
     try {
       professor = await professorRepository.findOneOrFail({ where: { id } });

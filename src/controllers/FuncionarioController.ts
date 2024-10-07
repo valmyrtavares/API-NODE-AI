@@ -1,18 +1,18 @@
 // src/controllers/FuncionarioController.ts
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { AppDataSource } from '../database';
 import { Funcionario } from '../models/Funcionario';
 
 class FuncionarioController {
   static listAll = async (req: Request, res: Response) => {
-    const funcionarioRepository = getRepository(Funcionario);
+    const funcionarioRepository = AppDataSource.getRepository(Funcionario);
     const funcionarios = await funcionarioRepository.find();
     res.send(funcionarios);
   };
 
   static getOneById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const funcionarioRepository = getRepository(Funcionario);
+    const funcionarioRepository = AppDataSource.getRepository(Funcionario);
     try {
       const funcionario = await funcionarioRepository.findOneOrFail({ where: { id } });
       res.send(funcionario);
@@ -30,7 +30,7 @@ class FuncionarioController {
     funcionario.cep = cep;
     funcionario.salario = salario;
 
-    const funcionarioRepository = getRepository(Funcionario);
+    const funcionarioRepository = AppDataSource.getRepository(Funcionario);
     try {
       await funcionarioRepository.save(funcionario);
     } catch (e) {
@@ -44,7 +44,7 @@ class FuncionarioController {
     const id = Number(req.params.id);
     const { nome, funcao, celular, cep, salario } = req.body;
 
-    const funcionarioRepository = getRepository(Funcionario);
+    const funcionarioRepository = AppDataSource.getRepository(Funcionario);
     let funcionario;
     try {
       funcionario = await funcionarioRepository.findOneOrFail({ where: { id } });
@@ -72,7 +72,7 @@ class FuncionarioController {
   static deleteFuncionario = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
-    const funcionarioRepository = getRepository(Funcionario);
+    const funcionarioRepository = AppDataSource.getRepository(Funcionario);
     let funcionario: Funcionario;
     try {
       funcionario = await funcionarioRepository.findOneOrFail({ where: { id } });

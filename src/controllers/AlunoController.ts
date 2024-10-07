@@ -1,18 +1,18 @@
 // src/controllers/AlunoController.ts
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { AppDataSource } from '../database';
 import { Aluno } from '../models/Aluno';
 
 class AlunoController {
   static listAll = async (req: Request, res: Response) => {
-    const alunoRepository = getRepository(Aluno);
+    const alunoRepository = AppDataSource.getRepository(Aluno);
     const alunos = await alunoRepository.find();
     res.send(alunos);
   };
 
   static getOneById = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const alunoRepository = getRepository(Aluno);
+    const alunoRepository = AppDataSource.getRepository(Aluno);
     try {
       const aluno = await alunoRepository.findOneOrFail({ where: { id } });
       res.send(aluno);
@@ -29,7 +29,7 @@ class AlunoController {
     aluno.curso = curso;
     aluno.inscrito = inscrito;
 
-    const alunoRepository = getRepository(Aluno);
+    const alunoRepository = AppDataSource.getRepository(Aluno);
     try {
       await alunoRepository.save(aluno);
     } catch (e) {
@@ -43,7 +43,7 @@ class AlunoController {
     const id = Number(req.params.id);
     const { nome, idade, curso, inscrito } = req.body;
 
-    const alunoRepository = getRepository(Aluno);
+    const alunoRepository = AppDataSource.getRepository(Aluno);
     let aluno;
     try {
       aluno = await alunoRepository.findOneOrFail({ where: { id } });
@@ -70,7 +70,7 @@ class AlunoController {
   static deleteAluno = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
 
-    const alunoRepository = getRepository(Aluno);
+    const alunoRepository = AppDataSource.getRepository(Aluno);
     let aluno: Aluno;
     try {
       aluno = await alunoRepository.findOneOrFail({ where: { id } });

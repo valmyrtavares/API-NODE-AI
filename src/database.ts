@@ -1,11 +1,10 @@
 // src/database.ts
-import { createConnection } from 'typeorm';
+import { DataSource  } from 'typeorm';
 import { Aluno } from './models/Aluno';
 import { Professor } from './models/Professor';
 import { Funcionario } from './models/Funcionario';
 
-export const connectDB = async () => {
-  await createConnection({
+export const AppDataSource = new DataSource({
     type: 'mysql',
     host: 'localhost',
     port: 3306,
@@ -16,4 +15,4 @@ export const connectDB = async () => {
     synchronize: true, // NÃO usar em produção
     charset: 'utf8mb4',
   });
-};
+
